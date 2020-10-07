@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace Arkanoid
 {
-    public class Platform
+    public class Platform : GameObject
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public Bitmap texture { get; }
-        public  Platform(int x,int y,Bitmap texture)
+
+        public Platform(int x,int y,Bitmap texture) : base(x, y, texture)
+        {
+            Width = 300;
+            Height = 30;
+        }
+        public void Follow(int x)
         {
             X = x;
-            Y = y;
-            this.texture = texture;
         }
+
 
     }
 }

@@ -8,44 +8,52 @@ using System.Windows.Forms;
 
 namespace Arkanoid
 {
-    public class Ball
+    public class Ball : GameObject
     {
         Form1 Form1;
         Platform Platform;
-        public int X { get; set; }
-        public int Y { get; set; }
+        public Block Block;
+
         private int x = 0;
         private int y = 0;
         int speed = 10;
-        public Bitmap texture { get; }
-        private bool IsFlying = false;
-        public Ball(int x, int y, Bitmap texture, Form1 form1, Platform platform)
+
+        public bool IsFlying { get; private set; } = false;
+        public Ball(int x, int y, Bitmap texture, Form1 form1, Platform platform) : base(x, y, texture)
         {
+            Width = Height = 30;
             Form1 = form1;
-            X = x;
-            Y = y;
-            this.texture = texture;
             Platform = platform;
         }
-        public void Move()
+        public void Waiting()
         {
             if (!IsFlying)
             {
-                X = Cursor.Position.X - 15;
+
+                X = Platform.X;
+                Y = 1000 - 30;
             }
-            else
+        }
+        public void Move()
+        {
+            if (IsFlying)
             {
-                if (X >= Form1.Width || X <= 0)
+
+                if (X >= Form1.Width || X <= 0 || (IsCrossed(Block) && Math.Abs(Block.X - X) > Math.Abs(Block.Y-Y)))
                 {
                     x = -x;
                 }
-                if (Y <= 0 || (Y >= Platform.Y && X >= Cursor.Position.X - 150 && x <= Cursor.Position.X + 150))
+                if ((IsCrossed(Block) && Math.Abs(Block.X - X) < Math.Abs(Block.Y - Y) )|| Y <= 0 || (Y >= Platform.Y && X >= Platform.X - 150 && X <= Platform.X + 150))
                 {
                     y = -y;
                 }
 
                 X -= speed * x;
                 Y -= speed * y;
+                if (Y > Form1.Height)
+                {
+                    IsFlying = false;
+                }
             }
         }
         public void Fly()
@@ -54,8 +62,8 @@ namespace Arkanoid
             {
                 IsFlying = true;
                 Random random = new Random();
-                x = random.Next(-5, 5);
-                y = random.Next(1, 5);
+                x = 0; //random.Next(-5, 5);
+                y = 4;// random.Next(1, 5);
 
             }
         }
